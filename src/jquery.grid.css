@@ -18,6 +18,14 @@ ul {
   overflow:hidden;
 }
 
+.fl {
+  float: left;
+}
+
+.fr {
+  float: right;
+}
+
 .ellipsis {
   overflow: hidden;
   text-overflow: ellipsis;
@@ -99,10 +107,28 @@ ul {
   background-position: 0 -30px;
 }
 
-.fl {
-  float: left;
+.pager {
+  padding: 20px 0 20px;
+  text-align: center;
+  font-size: 12px;
 }
 
-.fr {
-  float: right;
+.pager a {
+  color: #666666;
+  width: 20px;
+}
+
+.pager .pager-item,
+.pager .pager-next,
+.pager .pager-prev {
+  padding: 5px;
+  margin: 0 5px;
+  border: 1px solid #aaaaaa;
+  border-radius: 2px;
+}
+
+.pager a.active {
+  background-color: #ff6600;
+  color: #ffffff;
+  border: 1px solid #ff6600;
 }

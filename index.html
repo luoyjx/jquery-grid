@@ -121,7 +121,7 @@
 <script>
   $(document).ready(function() {
     $('.room-container').grid({
-      dataUrl: '.\\assets\\json\\data.json',
+      dataUrl: './assets/json/data.json',
       //dataMethod: 'POST',
       renderItem: function( item ) {
         return '<li data-rid="138286" style="width: 292.75px;">' +
@@ -130,7 +130,7 @@
                 '<b></b>' +
                 '<i class="black"></i>' +
                 '<img data-original="http://rpic.douyucdn.cn/z1605/30/20/138286_160530202455.jpg" '+
-                  'src="http://rpic.douyucdn.cn/z1605/30/20/138286_160530202455.jpg" width="283" height="163"'+
+                  'src="' + item.img + '" width="283" height="163"'+
                   'style="height: 163.546875px; display: block;">'+
                 '</span>' +
                 '<div class="mes">'+
