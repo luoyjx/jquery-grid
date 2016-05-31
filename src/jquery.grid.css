@@ -29,7 +29,7 @@ ul {
 
 .container {
   width: 1200px;
-  background-color: #aaaaaa;
+  background-color: #efefef;
   margin: 0 auto;
 }
 
@@ -37,6 +37,15 @@ ul {
   display: inline-block;
   margin: 0 5px 15px 0;
   float: left;
+  opacity: 0.7;
+}
+
+.room-container li:hover{
+  box-shadow:0px 0px 10px gray; /*CSS3 shadow: 30px blurred shadow all around image*/
+  -webkit-box-shadow:0px 0px 10px gray; /*Safari shadow version*/
+  -moz-box-shadow:0px 0px 10px gray; /*Mozilla shadow version*/
+  opacity: 1;
+  transition-duration: .3s;
 }
 
 .room-container li .room-thumbnail>img {
@@ -83,6 +92,7 @@ ul {
   padding-left: 18px;
   font-size: 12px;
   color: #797979;
+  background: url(../assets/imgs/mem-icos.png) no-repeat;
 }
 
 .room-container li p span.dy-num {
