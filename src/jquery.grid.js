@@ -23,7 +23,7 @@
      */
     var _defaults = {
       currentPage: 1,   //当前页
-      pageSize: 4,     //分页大小
+      pageSize: 8,     //分页大小
       totalCount: 0,    //总数
       dataUrl: '',      //数据请求地址
       dataMethod: 'GET',   //数据请求方式 GET、POST
@@ -95,6 +95,15 @@
     }
 
     /**
+     * 计算总页数
+     */
+    function getTotalPage() {
+      return _defaults.totalCount % _defaults.pageSize == 0
+          ? ( _defaults.totalCount / _defaults.pageSize )
+          : ( _defaults.totalCount / _defaults.pageSize ) + 1;
+    }
+
+    /**
      * 渲染
      * @param dataList 数据
      */
@@ -107,16 +116,13 @@
         return _defaults.renderItem( dataItem );
       }).join('');
 
-      //计算总页数
-      var totalPage = _defaults.totalCount % _defaults.pageSize == 0
-          ? ( _defaults.totalCount / _defaults.pageSize )
-          : ( _defaults.totalCount / _defaults.pageSize ) + 1;
-
-      console.log('total page : ', totalPage);
+      var totalPage = getTotalPage();
 
       renderHtml += renderPager( _defaults.currentPage, totalPage );
 
       $(_this).html(renderHtml);
+
+      addHandler();
     }
 
     /**
@@ -124,55 +130,119 @@
      */
     function renderPager( currentPage, totalPage ) {
       var renderHtml = '<div class="pager" >';
-      var prevPageHtml = '<a href="javascript:;" class="pager-prev {disable}">上一页</a>';
-      var nextPageHtml = '<a href="javascript:;" class="pager-next {disable}">下一页</a>';
-      var itemPageHtml = '<a href="javascript:;" class="pager-item {active}">{pageNo}</a>';
+      var prevPageHtml = '<a href="javascript:;" class="pager-prev {disable}" data-p="{p}">上一页</a>';
+      var nextPageHtml = '<a href="javascript:;" class="pager-next {disable}" data-p="{p}">下一页</a>';
+      var itemPageHtml = '<a href="javascript:;" class="pager-item {active}" data-p="{p}">{pageNo}</a>';
       var dotPageHtml = '<a href="javascript:;" class="pager-dot">...</a>';
       var renderEndHtml = '</div>';
 
       var pageStart = currentPage - 3 > 0 ? currentPage - 3 : 1;
       var pageEnd = pageStart + 6 >= totalPage ? totalPage : pageStart + 6;
-      console.log('start %s - end %s ', pageStart, pageEnd);
 
       //第一页时禁用上一页按钮
       if (currentPage == 1) {
-        renderHtml += prevPageHtml.replace('{disable}', 'pager-disable');
+        renderHtml += prevPageHtml
+            .replace('{disable}', 'pager-disable')
+            .replace('{p}', '1');
       } else {
-        renderHtml += prevPageHtml.replace('{disable}', '');
+        renderHtml += prevPageHtml
+            .replace('{disable}', '')
+            .replace('{p}', ( currentPage <= 1 ? 1 : currentPage - 1 ) + '' );
       }
 
       //第一页必渲染
       if (pageStart > 1) {
         renderHtml += itemPageHtml
             .replace('{pageNo}', '1')
-            .replace('{disable}', ( currentPage == 1 ? 'pager-disable' : '' ));
+            .replace('{disable}', ( currentPage == 1 ? 'pager-disable' : '' ))
+            .replace('{p}', '1');
         renderHtml += dotPageHtml;
       }
 
       for( var i = pageStart; i <= pageEnd; i++) {
           renderHtml += itemPageHtml
               .replace('{active}', ( i == currentPage ? 'active' : '' ))
-              .replace('{pageNo}', i + '');
+              .replace('{pageNo}', i + '')
+              .replace('{p}', i + '');
       }
 
       if ( pageEnd < totalPage ) {
         renderHtml += dotPageHtml;
         renderHtml += itemPageHtml
             .replace('{pageNo}', totalPage)
-            .replace('{disable}', ( currentPage == totalPage ? 'pager-disable' : '' ));
+            .replace('{disable}', ( currentPage == totalPage ? 'pager-disable' : '' ))
+            .replace('{p}', totalPage + '');
       }
 
       //第一页时禁用上一页按钮
       if (currentPage == totalPage) {
-        renderHtml += nextPageHtml.replace('{disable}', 'pager-disable');
+        renderHtml += nextPageHtml
+            .replace('{disable}', 'pager-disable')
+            .replace('{p}', totalPage + '');
       } else {
-        renderHtml += nextPageHtml.replace('{disable}', '');
+        renderHtml += nextPageHtml
+            .replace('{disable}', '')
+            .replace('{p}', ( currentPage >= totalPage ? totalPage : currentPage + 1 ) + '' );
       }
 
       return renderHtml + renderEndHtml;
     }
 
+    /**
+     * 添加事件处理
+     */
+    function addHandler() {
+      var totalPage = getTotalPage();
+
+      //上一页 下一页 翻页事件
+      if ( _defaults.currentPage && _defaults.currentPage < totalPage ) {
+        $('.pager-next').click(function changePageHandler() {
+          var $this = $(this);
+          var targetPage = $this.data('p');
+          if ( !targetPage ) return;
+          targetPage = parseInt( targetPage, 10 );
+          changePage( targetPage );
+        });
+        $('.pager-prev').click(function changePageHandler() {
+          var $this = $(this);
+          var targetPage = $this.data('p');
+          if ( !targetPage ) return;
+          targetPage = parseInt( targetPage, 10 );
+          changePage( targetPage );
+        });
+      } else if ( _defaults.currentPage == 1 ) {
+        $('.pager-next').click(function changePageHandler() {
+          var $this = $(this);
+          var targetPage = $this.data('p');
+          if ( !targetPage ) return;
+          targetPage = parseInt( targetPage, 10 );
+          changePage( targetPage );
+        });
+      } else if ( _defaults.currentPage == totalPage ) {
+        $('.pager-prev').click(function changePageHandler() {
+          var $this = $(this);
+          var targetPage = $this.data('p');
+          if ( !targetPage ) return;
+          targetPage = parseInt( targetPage, 10 );
+          changePage( targetPage );
+        });
+      }
+
+      //页码 翻页
+      $('.pager-item').click(function () {
+        var $this = $(this);
+        var targetPage = $this.data('p');
+        if ( !targetPage ) return;
+        targetPage = parseInt( targetPage, 10 );
+        changePage( targetPage );
+      });
+    }
+
     init( options );
+
+    return {
+      changePage: changePage
+    };
   };
 
 })(jQuery);
