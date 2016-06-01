@@ -99,8 +99,8 @@
      */
     function getTotalPage() {
       return _defaults.totalCount % _defaults.pageSize == 0
-          ? ( _defaults.totalCount / _defaults.pageSize )
-          : ( _defaults.totalCount / _defaults.pageSize ) + 1;
+          ? parseInt( _defaults.totalCount / _defaults.pageSize, 10 )
+          : parseInt( _defaults.totalCount / _defaults.pageSize, 10 ) + 1;
     }
 
     /**
@@ -160,10 +160,10 @@
       }
 
       for( var i = pageStart; i <= pageEnd; i++) {
-          renderHtml += itemPageHtml
-              .replace('{active}', ( i == currentPage ? 'active' : '' ))
-              .replace('{pageNo}', i + '')
-              .replace('{p}', i + '');
+        renderHtml += itemPageHtml
+            .replace('{active}', ( i == currentPage ? 'active' : '' ))
+            .replace('{pageNo}', i + '')
+            .replace('{p}', i + '');
       }
 
       if ( pageEnd < totalPage ) {
@@ -174,7 +174,7 @@
             .replace('{p}', totalPage + '');
       }
 
-      //第一页时禁用上一页按钮
+      //最后一页时禁用下一页按钮
       if (currentPage == totalPage) {
         renderHtml += nextPageHtml
             .replace('{disable}', 'pager-disable')
