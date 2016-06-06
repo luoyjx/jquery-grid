@@ -27,7 +27,9 @@
       totalCount: 0,    //总数
       dataUrl: '',      //数据请求地址
       dataMethod: 'GET',   //数据请求方式 GET、POST
-      renderItem: undefined  //渲染子项的函数
+      params: {},          //参数
+      renderItem: undefined,  //渲染子项的函数
+      success: undefined         //获取到数据的处理函数
     };
 
     /**
@@ -38,13 +40,7 @@
       _defaults = $.extend( _defaults, options );
 
       //初始化，加载数据
-      loadData( _defaults.currentPage, function( result ) {
-        //只取页面大小数据
-        var data = Array.prototype.slice.call( result.data, 0, _defaults.pageSize );
-        //更新数据
-        _defaults.totalCount = result.total;
-        render( data );
-      });
+      loadData( _defaults.currentPage, loadSuccess );
     }
 
     /**
@@ -54,14 +50,7 @@
     function changePage( page ) {
 
       //加载对应页面数据
-      loadData( page, function( result ) {
-        //只取页面大小数据
-        var data = Array.prototype.slice.call( result.data, 0, _defaults.pageSize );
-        //更新数据
-        _defaults.totalCount = result.total;
-        _defaults.currentPage = page;
-        render( data );
-      });
+      loadData( page, loadSuccess );
     }
 
     /**
@@ -89,9 +78,25 @@
       $.ajax({
         url: _defaults.dataUrl,
         type: _defaults.dataMethod,
-        data: { iDisplayStart: offset, iDisplayLength: _defaults.pageSize },
+        data: $.extend({}, _defaults.params ,{ iDisplayStart: offset, iDisplayLength: _defaults.pageSize }),
         success: successCallback
       })
+    }
+
+    /**
+     * 加载成功
+     * @param result 返回结果
+     */
+    function loadSuccess( result ) {
+      var _result = _defaults.success( result );
+      if (!(_result instanceof Array)) throw new Error('must return [ data, count ] Array.');
+
+      //只取页面大小数据
+      var data = Array.prototype.slice.call( _result[0], 0, _defaults.pageSize );
+      //更新数据
+      _defaults.totalCount = _result[1];
+
+      render( data );
     }
 
     /**

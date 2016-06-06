@@ -123,6 +123,10 @@
     $('.room-container').grid({
       dataUrl: './assets/json/data.json',
       //dataMethod: 'POST',
+      params: {
+        a: 1,
+        b: 2
+      },
       renderItem: function( item ) {
         return '<li data-rid="138286" style="width: 292.75px;">' +
                 '<a href="/wt55kai" title="' + item.room_name +  '">' +
@@ -145,6 +149,9 @@
           '</div>'+
         '</a>'+
         '</li>';
+      },
+      success: function( result ) {
+        return [result.data.items, result.data.recordsTotal];
       }
     });
   });

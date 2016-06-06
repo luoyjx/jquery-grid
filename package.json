@@ -1,0 +1,32 @@
+{
+  "name": "jquery-grid",
+  "version": "1.0.0",
+  "description": "jquery grid plugin",
+  "main": "src/jquery.grid.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/luoyjx/jquery-grid.git"
+  },
+  "keywords": [
+    "jquery",
+    "plugin",
+    "grid"
+  ],
+  "author": "luoyjx",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/luoyjx/jquery-grid/issues"
+  },
+  "homepage": "https://github.com/luoyjx/jquery-grid#readme",
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-clean": "^0.3.2",
+    "gulp-concat": "^2.6.0",
+    "gulp-minify-css": "^1.2.4",
+    "gulp-rename": "^1.2.2",
+    "gulp-uglify": "^1.5.3"
+  }
+}
